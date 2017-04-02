@@ -11,6 +11,6 @@ gradlew.bat
 
 ### Idea:
 .idea
-.iml
+*.iml
 out
 target
