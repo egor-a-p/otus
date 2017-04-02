@@ -1,45 +1,59 @@
-plugins {
-    id "groovy"
-    id "java"
-    id "idea"
-}
+import proguard.gradle.ProGuardTask
+
+apply plugin: 'java'
+apply plugin: 'idea'
 
 group 'ru.otus'
 version '1.0'
 
-
 defaultTasks = ['clean', 'jar']
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.sf.proguard:proguard-gradle:5.3.2'
+    }
+}
+
+ext {
+    junitVersion = '4.12'
+    opencsvVersion = '2.3'
+    mainClassName = 'ru.otus.lottery.Main'
+    jarName =  rootProject.name + '_' + JavaVersion.current() + '_' + System.getProperty("os.name") + '.jar'
+    obfJarName = rootProject.name + '-obf.jar'
+}
 
 repositories {
     mavenCentral()
 }
 
-ext {
-    junitVersion = 4.12
-    opencsvVersion = 2.3
-    mainClass = 'ru.otus.lottery.Main'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = "3.1"
+dependencies {
+    compile "net.sf.opencsv:opencsv:$opencsvVersion"
+    testCompile "junit:junit:$junitVersion"
 }
 
 jar {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-    archiveName = rootProject.name + '_' + JavaVersion.current() + '_' + System.getProperty("os.name") + '.jar'
+    archiveName =jarName
     manifest {
         attributes 'Version': version,
-                   'Main-Class': mainClass
+                   'Main-Class': mainClassName
     }
     from {
-        configurations.compile.collect {
+        (configurations.compile).collect {
             it.isDirectory() ? it : zipTree(it)
         }
     }
 }
 
-dependencies {
-    compile "net.sf.opencsv:opencsv:$opencsvVersion"
-    testCompile "junit:junit:$junitVersion"
+task obfuscate(type: ProGuardTask, dependsOn: 'jar') {
+    injars "./build/libs/${jarName}"
+    outjars "./build/libs/${obfJarName}"
+
+    libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
+
+    configuration "proguard.conf"
 }
