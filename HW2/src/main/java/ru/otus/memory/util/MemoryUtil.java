@@ -1,4 +1,4 @@
-package ru.otus.memory;
+package ru.otus.memory.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;

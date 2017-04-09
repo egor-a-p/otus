@@ -1,4 +1,4 @@
-package ru.otus.memory;
+package ru.otus.memory.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

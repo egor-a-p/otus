@@ -2,9 +2,17 @@ group 'ru.otus'
 version '1.0'
 
 apply plugin: 'java'
-apply plugin: 'application'
-mainClassName = "ru.otus.memory.Main"
 
 sourceCompatibility = 1.8
 
-run.dependsOn(compileJava)
+repositories {
+    mavenCentral()
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
