@@ -52,12 +52,12 @@ public class MemoryUtil {
         return size;
     }
 
-    private static void collect(Object o, Deque<Object> deque, Map<Object, Object> visited) {
+    private static void collect(Object o, Deque<Object> deque, Map<Object, Object> identity) {
         Class<?> c = o.getClass();
         if (c.isArray() && !c.getComponentType().isPrimitive()) {
             IntStream.range(0, Array.getLength(o)).forEach(i -> {
                 Object iV = Array.get(o, i);
-                if (iV != null && visited.put(iV, iV) == null) {
+                if (iV != null && identity.put(iV, iV) == null) {
                     deque.push(iV);
                 }
             });
@@ -69,7 +69,7 @@ public class MemoryUtil {
                             f.setAccessible(true);
                             try {
                                 Object fV = f.get(o);
-                                if (fV != null && visited.put(fV, fV) == null) {
+                                if (fV != null && identity.put(fV, fV) == null) {
                                     deque.add(fV);
                                 }
                             } catch (Exception e) {
