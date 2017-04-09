@@ -48,12 +48,12 @@ public class MemoryUtilTest {
     }
 
     @Test
-    public void sizeOfEmptyStringSize() {
+    public void sizeOfEmptyString() {
         checkSize("");
     }
 
     @Test
-    public void sizeOfNotEmptyStringSize() {
+    public void sizeOfNotEmptyString() {
         checkSize("ABCD");
     }
 
