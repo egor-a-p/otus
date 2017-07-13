@@ -3,9 +3,6 @@ import proguard.gradle.ProGuardTask
 apply plugin: 'java'
 apply plugin: 'idea'
 
-group 'ru.otus'
-version '1.0'
-
 defaultTasks = ['clean', 'jar']
 
 buildscript {
@@ -20,12 +17,8 @@ buildscript {
 ext {
     opencsvVersion = '2.3'
     mainClassName = 'ru.otus.lottery.Main'
-    jarName =  rootProject.name + '_' + JavaVersion.current() + '_' + System.getProperty("os.name") + '.jar'
-    obfJarName = rootProject.name + '-obf.jar'
-}
-
-repositories {
-    mavenCentral()
+    jarName =  name + '_' + JavaVersion.current() + '_' + System.getProperty("os.name") + '.jar'
+    obfJarName = name + '-obf.jar'
 }
 
 dependencies {
@@ -37,7 +30,7 @@ jar {
     targetCompatibility = JavaVersion.VERSION_1_8
     archiveName =jarName
     manifest {
-        attributes 'Version': version,
+        attributes 'Version': rootProject.version,
                    'Main-Class': mainClassName
     }
     from {
