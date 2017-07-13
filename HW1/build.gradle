@@ -1,0 +1,57 @@
+import proguard.gradle.ProGuardTask
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+group 'ru.otus'
+version '1.0'
+
+defaultTasks = ['clean', 'jar']
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.sf.proguard:proguard-gradle:5.3.2'
+    }
+}
+
+ext {
+    opencsvVersion = '2.3'
+    mainClassName = 'ru.otus.lottery.Main'
+    jarName =  rootProject.name + '_' + JavaVersion.current() + '_' + System.getProperty("os.name") + '.jar'
+    obfJarName = rootProject.name + '-obf.jar'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "net.sf.opencsv:opencsv:$opencsvVersion"
+}
+
+jar {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    archiveName =jarName
+    manifest {
+        attributes 'Version': version,
+                   'Main-Class': mainClassName
+    }
+    from {
+        (configurations.compile).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+task obfuscate(type: ProGuardTask, dependsOn: 'jar') {
+    injars "./build/libs/${jarName}"
+    outjars "./build/libs/${obfJarName}"
+
+    libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
+
+    configuration "proguard.conf"
+}
