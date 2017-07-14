@@ -19,12 +19,12 @@ public enum SQLType {
 	INT("int", int.class, Integer.class),
 	VARCHAR("varchar", String.class);
 
-	private static final ConcurrentMap<Class, SQLType> sqlTypeByJavaClasses = Arrays.stream(values())
+	private static final ConcurrentMap<Class, SQLType> sqlToJava = Arrays.stream(values())
 		.flatMap(sqlType -> sqlType.classes.stream().map(c -> new Pair<>(c, sqlType)))
 		.collect(Collectors.toConcurrentMap(Pair::getKey, Pair::getValue));
 
 	public static SQLType map(Class aClass) throws UnsupportedDataTypeException {
-		return Optional.ofNullable(sqlTypeByJavaClasses.get(aClass)).orElseThrow(UnsupportedDataTypeException::new);
+		return Optional.ofNullable(sqlToJava.get(aClass)).orElseThrow(UnsupportedDataTypeException::new);
 	}
 
 	private final String declaration;
