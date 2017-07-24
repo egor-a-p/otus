@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 import ru.otus.entity.User;
+import ru.otus.orm.ORMException;
 import ru.otus.orm.SimpleExecutor;
 
 /**
@@ -67,6 +68,25 @@ public class ExecutorTest {
 		//then
 		User loaded = executor.load(User.class, id);
 		Assert.assertNull(loaded);
+	}
+
+	@Test(expected = ORMException.class)
+	public void shouldNotSaveWithId() {
+		//when
+		user.setId(user.getId() + 1000);
+		executor.save(user);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldNotSaveNull() {
+		//when
+		executor.save(null);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void shouldNotLoadNull() {
+		//then
+		executor.load(User.class, null);
 	}
 
 }

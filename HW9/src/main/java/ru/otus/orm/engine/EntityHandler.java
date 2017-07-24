@@ -59,7 +59,10 @@ public class EntityHandler<T> {
 		return t ->(() -> {
 			try {
 				if (hasId(t)) {
-					fillUpdate(connection.prepareStatement(update), t).executeUpdate();
+					int rows = fillUpdate(connection.prepareStatement(update), t).executeUpdate();
+					if (rows == 0) {
+						throw new ORMException("Entity " + t + "have illegal id.");
+					}
 				} else {
 					PreparedStatement statement = fillInsert(connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS), t);
 					statement.executeUpdate();
