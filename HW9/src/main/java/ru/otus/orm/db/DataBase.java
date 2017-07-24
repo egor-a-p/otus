@@ -9,7 +9,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * @author e.petrov. Created 07 - 2017.
  */
 public class DataBase {
-	private static final String DB_PROPERTIES = "db.properties";
+	private static final String DB_PROPERTIES = "/db.properties";
 
 	private static volatile DataSource dataSource;
 

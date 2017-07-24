@@ -2,6 +2,7 @@ package ru.otus.orm;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -16,27 +17,47 @@ import ru.otus.orm.engine.EntityHandler;
  */
 public class SimpleExecutor implements Executor {
 
-	private final DataSource dataSource = DataBase.getDataSource();
-
 	private static final ConcurrentMap<Class, EntityHandler> REGISTERED_HANDLERS = new ConcurrentHashMap<>();
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <V> void save(V v) throws SQLException {
-		EntityHandler<V> entityHandler = REGISTERED_HANDLERS.computeIfAbsent(v.getClass(), EntityHandler::create);
-		try(Connection connection = dataSource.getConnection()) {
-			connection.setAutoCommit(false);
-			entityHandler.prepareSave(connection).apply(v).executeUpdate();
-			connection.commit();
-		}
+	public static Executor getInstance() {
+		return new SimpleExecutor();
+	}
+
+	private final DataSource dataSource;
+
+	private SimpleExecutor() {
+		dataSource = DataBase.getDataSource();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <V> V load(Class<V> vClass, Object id) throws SQLException {
-		EntityHandler<V> entityHandler = REGISTERED_HANDLERS.computeIfAbsent(vClass, EntityHandler::create);
+	public <V> V save(V v) throws ORMException {
+		Objects.requireNonNull(v);
+		EntityHandler<V> entityHandler = getHandler(v.getClass());
+		try(Connection connection = dataSource.getConnection()) {
+			connection.setAutoCommit(false);
+			v = entityHandler.prepareSave(connection).apply(v).get();
+			connection.commit();
+			return v;
+		} catch (SQLException e) {
+			throw new ORMException(e);
+		}
+	}
+
+
+	@Override
+	public <V> V load(Class<V> vClass, Object id) throws ORMException {
+		Objects.requireNonNull(id);
+		Objects.requireNonNull(vClass);
+		EntityHandler<V> entityHandler = getHandler(vClass);
 		try(Connection connection = dataSource.getConnection()) {
 			return entityHandler.prepareLoad(connection).apply(id).get();
+		} catch (SQLException e) {
+			throw new ORMException(e);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private <V> EntityHandler<V> getHandler(Class<?> vClass) {
+		return REGISTERED_HANDLERS.computeIfAbsent(vClass, EntityHandler::create);
 	}
 }
