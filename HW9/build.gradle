@@ -1,6 +1,8 @@
 dependencies {
     compile 'javax.persistence:persistence-api:1.0.2',
             'com.zaxxer:HikariCP:2.3.2',
-            'postgresql:postgresql:9.1-901-1.jdbc4'
+            'org.postgresql:postgresql:9.4.1212',
+            'org.apache.commons:commons-lang3:3.6'
+
     compileOnly 'org.projectlombok:lombok:1.16.16'
 }
