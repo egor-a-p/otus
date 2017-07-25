@@ -70,23 +70,23 @@ public class ExecutorTest {
 		Assert.assertNull(loaded);
 	}
 
-	@Test(expected = ORMException.class)
+	@Test(/*then*/expected = ORMException.class)
 	public void shouldNotSaveWithId() {
 		//when
 		user.setId(user.getId() + 1000);
 		executor.save(user);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(/*then*/expected = NullPointerException.class)
 	public void shouldNotSaveNull() {
 		//when
 		executor.save(null);
 	}
 
-	@Test(expected = NullPointerException.class)
+
+	@Test(/*then*/expected = NullPointerException.class)
 	public void shouldNotLoadNull() {
-		//then
+		//when
 		executor.load(User.class, null);
 	}
-
 }
