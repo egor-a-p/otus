@@ -34,10 +34,7 @@ public class SimpleExecutor implements Executor {
 		Objects.requireNonNull(v);
 		EntityHandler<V> entityHandler = getHandler(v.getClass());
 		try(Connection connection = dataSource.getConnection()) {
-			connection.setAutoCommit(false);
-			v = entityHandler.prepareSave(connection).apply(v).get();
-			connection.commit();
-			return v;
+			return entityHandler.prepareSave(connection).apply(v).get();
 		} catch (SQLException e) {
 			throw new ORMException(e);
 		}

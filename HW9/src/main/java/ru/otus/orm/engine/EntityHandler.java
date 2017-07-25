@@ -58,22 +58,28 @@ public class EntityHandler<T> {
 	public Function<T, Supplier<T>> prepareSave(Connection connection) {
 		return t ->(() -> {
 			try {
-				if (hasId(t)) {
-					int rows = fillUpdate(connection.prepareStatement(update), t).executeUpdate();
-					if (rows == 0) {
-						throw new ORMException("Entity " + t + "have illegal id.");
-					}
-				} else {
-					PreparedStatement statement = fillInsert(connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS), t);
-					statement.executeUpdate();
-					ResultSet generatedKeys = statement.getGeneratedKeys();
-					if (generatedKeys.next()) {
-						id.getValue().set(t, generatedKeys.getObject(1));
+				boolean hasId = hasId(t);
+				connection.setAutoCommit(false);
+				try (PreparedStatement statement = hasId ? connection.prepareStatement(update) :
+					connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
+					if (hasId) {
+						int rows = fillUpdate(statement, t).executeUpdate();
+						if (rows == 0) {
+							throw new ORMException("Entity " + t + "have illegal id.");
+						}
 					} else {
-						throw new SQLException("Insert new entity failed, no id obtained.");
+						fillInsert(statement, t);
+						statement.executeUpdate();
+						ResultSet generatedKeys = statement.getGeneratedKeys();
+						if (generatedKeys.next()) {
+							id.getValue().set(t, generatedKeys.getObject(1));
+						} else {
+							throw new SQLException("Insert new entity failed, no id obtained.");
+						}
 					}
+					connection.commit();
+					return t;
 				}
-				return t;
 			} catch (SQLException | IllegalAccessException e) {
 				throw new ORMException(e);
 			}
