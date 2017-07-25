@@ -76,8 +76,9 @@ public class EntityHandler<T> {
 							throw new SQLException("Insert new entity failed, no id obtained.");
 						}
 					}
-					connection.commit();
 					return t;
+				} finally {
+					connection.commit();
 				}
 			} catch (SQLException | IllegalAccessException e) {
 				throw new ORMException(e);
