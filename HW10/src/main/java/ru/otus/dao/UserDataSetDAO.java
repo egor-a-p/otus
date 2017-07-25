@@ -1,11 +1,11 @@
-package ru.otus.service;
+package ru.otus.dao;
 
 import ru.otus.entity.UserDataSet;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public interface UserDBService extends DBService<UserDataSet> {
+public interface UserDataSetDAO extends DataSetDAO<UserDataSet> {
 
 	UserDataSet readByName(String name);
 

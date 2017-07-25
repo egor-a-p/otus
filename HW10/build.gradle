@@ -3,7 +3,11 @@ dependencies {
             'org.hibernate:hibernate-entitymanager:5.2.10.Final',
             'org.hibernate:hibernate-hikaricp:5.2.10.Final',
             'org.postgresql:postgresql:9.4.1212',
-            'org.apache.commons:commons-lang3:3.6'
+            'org.apache.commons:commons-lang3:3.6',
+            'org.slf4j:slf4j-simple:1.7.25'
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
+}
+test {
+    testLogging.showStandardStreams = true
 }
