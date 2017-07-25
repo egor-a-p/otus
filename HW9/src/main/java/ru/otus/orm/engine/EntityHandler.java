@@ -68,8 +68,7 @@ public class EntityHandler<T> {
 							throw new ORMException("Entity " + t + "have illegal id.");
 						}
 					} else {
-						fillInsert(statement, t);
-						statement.executeUpdate();
+						fillInsert(statement, t).executeUpdate();
 						ResultSet generatedKeys = statement.getGeneratedKeys();
 						if (generatedKeys.next()) {
 							id.getValue().set(t, generatedKeys.getObject(1));
