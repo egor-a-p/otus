@@ -1,16 +1,9 @@
 package ru.otus.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * @author e.petrov. Created 07 - 2017.
@@ -19,6 +12,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "address")
 @EqualsAndHashCode(callSuper = true)
+@NamedQueries({
+		@NamedQuery(name = "AddressDataSet.readAll", query = "SELECT a FROM AddressDataSet a"),
+		@NamedQuery(name = "AddressDataSet.readByUser", query = "SELECT a FROM AddressDataSet a WHERE a.user = :user")
+})
 public class AddressDataSet extends DataSet{
 
 	@Column(name = "street")
@@ -27,7 +24,6 @@ public class AddressDataSet extends DataSet{
 	@Column(name = "index")
 	private int index;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "address")
 	private UserDataSet user;
 }

@@ -1,20 +1,26 @@
 package ru.otus.dao;
 
 import java.util.List;
+import java.util.function.Function;
 
+import org.hibernate.Session;
 import ru.otus.entity.DataSet;
+
+import javax.persistence.EntityManager;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public interface DataSetDAO<T extends DataSet> {
+interface DataSetDAO<T extends DataSet> {
 
-	 void save(T dataSet);
+    String status();
+
+	void save(T dataSet);
 
 	T read(long id);
 
-	T readByName(String name);
-
 	List<T> readAll();
 
+	void close();
 }
+

@@ -11,6 +11,7 @@ import org.junit.rules.TestName;
 import ru.otus.entity.AddressDataSet;
 import ru.otus.entity.PhoneDataSet;
 import ru.otus.entity.UserDataSet;
+import ru.otus.persistence.PersistenceUnit;
 
 /**
  * @author e.petrov. Created 07 - 2017.
@@ -21,6 +22,7 @@ public class UserDBServiceTest {
 
 	@BeforeClass
 	public static void beforeAll() {
+		PersistenceUnit.initialize();
 		userService = DBServiceHibernateImpl.getInstance();
 	}
 
@@ -38,8 +40,8 @@ public class UserDBServiceTest {
 		phone1.setNumber(phone1.getCode() + "" + testName.hashCode());
 
 		PhoneDataSet phone2 = new PhoneDataSet();
-		phone1.setCode(888);
-		phone1.setNumber(phone1.getCode() + "" + testName.hashCode());
+		phone2.setCode(888);
+		phone2.setNumber(phone2.getCode() + "" + testName.hashCode());
 
 		UserDataSet user = new UserDataSet();
 		user.setName("test user for: " + testName.getMethodName());
@@ -52,6 +54,7 @@ public class UserDBServiceTest {
 	@AfterClass
 	public static void afterAll() {
 		userService.shutdown();
+		PersistenceUnit.destroy();
 	}
 
 }

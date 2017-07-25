@@ -1,16 +1,10 @@
 package ru.otus.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+
 
 /**
  * @author e.petrov. Created 07 - 2017.
@@ -19,6 +13,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "phone")
 @EqualsAndHashCode(callSuper = true)
+@NamedQueries({
+		@NamedQuery(name = "PhoneDataSet.readAll", query = "SELECT p FROM PhoneDataSet p"),
+		@NamedQuery(name = "PhoneDataSet.readByCode", query = "SELECT p FROM PhoneDataSet p WHERE p.code = :code")
+})
 public class PhoneDataSet extends DataSet {
 
 	@Column(name = "code")
