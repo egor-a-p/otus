@@ -60,11 +60,11 @@ public class EntityHandler<T> {
 			try {
 				boolean hasId = hasId(t);
 				connection.setAutoCommit(false);
-				try (PreparedStatement statement = hasId ? connection.prepareStatement(update) :
+				try (PreparedStatement statement = hasId ?
+					connection.prepareStatement(update) :
 					connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
 					if (hasId) {
-						int rows = fillUpdate(statement, t).executeUpdate();
-						if (rows == 0) {
+						if (fillUpdate(statement, t).executeUpdate() == 0) {
 							throw new ORMException("Entity " + t + "have illegal id.");
 						}
 					} else {
@@ -73,13 +73,15 @@ public class EntityHandler<T> {
 						if (generatedKeys.next()) {
 							id.getValue().set(t, generatedKeys.getObject(1));
 						} else {
-							throw new SQLException("Insert new entity failed, no id obtained.");
+							throw new ORMException("Insert new entity failed, no id obtained.");
 						}
 					}
-					return t;
-				} finally {
-					connection.commit();
+				} catch (ORMException | SQLException e) {
+					connection.rollback();
+					throw e;
 				}
+				connection.commit();
+				return t;
 			} catch (SQLException | IllegalAccessException e) {
 				throw new ORMException(e);
 			}
