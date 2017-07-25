@@ -22,9 +22,13 @@ public class DBServiceHibernateImpl implements UserDBService, Transactional {
 
 	public static final String PERSISTENT_UNIT_NAME = "users";
 
+	public static UserDBService getInstance() {
+		return new DBServiceHibernateImpl();
+	}
+
 	private final EntityManagerFactory factory;
 
-	public DBServiceHibernateImpl() {
+	private DBServiceHibernateImpl() {
 		this.factory = Persistence.createEntityManagerFactory(PERSISTENT_UNIT_NAME);
 	}
 
@@ -38,31 +42,37 @@ public class DBServiceHibernateImpl implements UserDBService, Transactional {
 
 	@Override
 	public String getLocalStatus() {
+		log.debug("getLocalStatus");
 		return transactional(em(), em -> em.unwrap(Session.class).getTransaction().getStatus().name());
 	}
 
 	@Override
 	public void save(UserDataSet dataSet) {
+		log.debug("save: {}", dataSet);
 		dao().save(dataSet);
 	}
 
 	@Override
 	public UserDataSet read(long id) {
+		log.debug("read by id: {}", id);
 		return dao().read(id);
 	}
 
 	@Override
 	public List<UserDataSet> readAll() {
+		log.debug("readAll");
 		return dao().readAll();
 	}
 
 	@Override
 	public void shutdown() {
+		log.debug("shutdown");
 		factory.close();
 	}
 
 	@Override
 	public UserDataSet readByName(String name) {
+		log.debug("readByName: {}", name);
 		return dao().readByName(name);
 	}
 }
