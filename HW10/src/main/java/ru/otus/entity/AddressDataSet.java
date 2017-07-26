@@ -2,15 +2,10 @@ package ru.otus.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author e.petrov. Created 07 - 2017.
@@ -73,10 +68,7 @@ public class AddressDataSet extends DataSet{
 		if (index != that.index) {
 			return false;
 		}
-		if (street != null ? !street.equals(that.street) : that.street != null) {
-			return false;
-		}
-		return user != null ? user.equals(that.user) : that.user == null;
+		return street != null ? street.equals(that.street) : that.street == null;
 	}
 
 	@Override
@@ -84,12 +76,11 @@ public class AddressDataSet extends DataSet{
 		int result = super.hashCode();
 		result = 31 * result + (street != null ? street.hashCode() : 0);
 		result = 31 * result + index;
-		result = 31 * result + (user != null ? user.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "AddressDataSet{" + "street='" + street + '\'' + ", index=" + index + ", user=" + user + '}';
+		return "AddressDataSet{" + "street='" + street + '\'' + ", index=" + index + '}';
 	}
 }

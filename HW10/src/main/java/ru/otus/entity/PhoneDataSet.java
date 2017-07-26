@@ -8,9 +8,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 /**
  * @author e.petrov. Created 07 - 2017.
  */
@@ -74,10 +71,7 @@ public class PhoneDataSet extends DataSet {
 		if (code != that.code) {
 			return false;
 		}
-		if (number != null ? !number.equals(that.number) : that.number != null) {
-			return false;
-		}
-		return user != null ? user.equals(that.user) : that.user == null;
+		return number != null ? number.equals(that.number) : that.number == null;
 	}
 
 	@Override
@@ -85,12 +79,11 @@ public class PhoneDataSet extends DataSet {
 		int result = super.hashCode();
 		result = 31 * result + code;
 		result = 31 * result + (number != null ? number.hashCode() : 0);
-		result = 31 * result + (user != null ? user.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "PhoneDataSet{" + "code=" + code + ", number='" + number + '\'' + ", user=" + user + '}';
+		return "PhoneDataSet{" + "code=" + code + ", number='" + number + '\'' + '}';
 	}
 }

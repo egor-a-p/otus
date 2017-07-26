@@ -18,9 +18,11 @@ public class UserDataSetDAOTest extends AbstractDAOTest {
 
 	@Override
 	protected UserDataSet create() {
+		UserDataSet user = new UserDataSet();
 		AddressDataSet address = new AddressDataSet();
 		address.setStreet("street for test: " + testName.getMethodName());
 		address.setIndex(testName.getMethodName().length());
+		address.setUser(user);
 
 		List<PhoneDataSet> phones = new ArrayList<>();
 
@@ -28,11 +30,12 @@ public class UserDataSetDAOTest extends AbstractDAOTest {
 			PhoneDataSet phone = new PhoneDataSet();
 			phone.setCode(i);
 			phone.setNumber("" + testName.hashCode() + i);
+			phone.setUser(user);
 			phones.add(phone);
 		});
 
 
-		UserDataSet user = new UserDataSet();
+
 		user.setName("user for test: " + testName.getMethodName() + 1000 * Math.random());
 		user.setUserAddress(address);
 		user.setPhones(phones);

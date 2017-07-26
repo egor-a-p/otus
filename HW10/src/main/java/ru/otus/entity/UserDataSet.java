@@ -65,26 +65,18 @@ public class UserDataSet extends DataSet {
 
 		UserDataSet that = (UserDataSet) o;
 
-		if (name != null ? !name.equals(that.name) : that.name != null) {
-			return false;
-		}
-		if (userAddress != null ? !userAddress.equals(that.userAddress) : that.userAddress != null) {
-			return false;
-		}
-		return phones != null ? phones.equals(that.phones) : that.phones == null;
+		return name != null ? name.equals(that.name) : that.name == null;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
 		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (userAddress != null ? userAddress.hashCode() : 0);
-		result = 31 * result + (phones != null ? phones.hashCode() : 0);
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "UserDataSet{" + "name='" + name + '\'' + ", userAddress=" + userAddress + ", phones=" + phones + '}';
+		return "UserDataSet{" + "name='" + name + '\'' + '}';
 	}
 }
