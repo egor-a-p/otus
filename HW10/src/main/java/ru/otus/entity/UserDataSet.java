@@ -13,11 +13,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * Created by egor on 24.07.17.
  */
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@ToString(callSuper = true, exclude = {"phones", "userAddress"})
 @NamedQueries({
 	@NamedQuery(name = "UserDataSet.readByName", query = "SELECT u FROM UserDataSet u WHERE u.name = :name"),
 	@NamedQuery(name = "UserDataSet.readAll", query = "SELECT u FROM UserDataSet u")
@@ -33,57 +40,4 @@ public class UserDataSet extends DataSet {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PhoneDataSet> phones = new ArrayList<>();
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public AddressDataSet getUserAddress() {
-		return userAddress;
-	}
-
-	public void setUserAddress(AddressDataSet userAddress) {
-		this.userAddress = userAddress;
-	}
-
-	public List<PhoneDataSet> getPhones() {
-		return phones;
-	}
-
-	public void setPhones(List<PhoneDataSet> phones) {
-		this.phones = phones;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		if (!super.equals(o)) {
-			return false;
-		}
-
-		UserDataSet that = (UserDataSet) o;
-
-		return name != null ? name.equals(that.name) : that.name == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = super.hashCode();
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "UserDataSet{" + "name='" + name + '\'' + '}';
-	}
 }

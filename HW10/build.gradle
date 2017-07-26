@@ -11,8 +11,5 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.16'
 }
 test {
-    println 'Starting DAO test suite'
-    include '**/*TestSuite.class'
-    exclude '**/*Test.class'
     testLogging.showStandardStreams = true
 }

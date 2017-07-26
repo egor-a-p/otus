@@ -1,21 +1,29 @@
 package ru.otus.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
 import ru.otus.entity.DataSet;
-
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import ru.otus.persistence.PersistenceUnit;
 
 /**
  * Created by egor on 25.07.17.
  */
 public abstract class AbstractDAOTest<T extends DataSet> {
+
+	@BeforeClass
+	public static void initialize() {
+		PersistenceUnit.initialize();
+	}
+
+	@AfterClass
+	public static void destroy() {
+		PersistenceUnit.destroy();
+	}
 
 	@Rule
 	public TestName testName = new TestName();
@@ -24,8 +32,6 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 
 	protected abstract DataSetDAO<T> dao();
 
-	protected List<T> saved = new ArrayList<>();
-
 	@Test
 	public void shouldSaveEntity() {
 		//given
@@ -33,7 +39,6 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 
 		//when
 		dao().save(dataSet);
-		saved.add(dataSet);
 
 		//then
 		Assert.assertNotNull(dataSet.getId());
@@ -46,7 +51,6 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 
 		//when
 		dao().save(dataSet);
-		saved.add(dataSet);
 		T loaded = dao().read(dataSet.getId());
 
 		//then
@@ -60,10 +64,9 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 
 		//when
 		dao().save(dataSet);
-		saved.add(dataSet);
 
 		//then
-		Assert.assertThat(dao().readAll(), containsInAnyOrder(saved.toArray()));
+		Assert.assertTrue(dao().readAll().contains(dataSet));
 	}
 }
 
