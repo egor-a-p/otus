@@ -1,16 +1,16 @@
 package ru.otus.persistence;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Велосипед
- * <p>
  * Created by egor on 25.07.17.
  */
 @Slf4j

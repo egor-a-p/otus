@@ -1,16 +1,19 @@
 package ru.otus.persistence;
 
-import org.hibernate.Session;
-import ru.otus.entity.DataSet;
-
-import javax.persistence.EntityManager;
 import java.util.Objects;
 import java.util.function.Function;
+
+import javax.persistence.EntityManager;
+
+import org.hibernate.Session;
+
+import ru.otus.dao.DataSetDAO;
+import ru.otus.entity.DataSet;
 
 /**
  * Created by egor on 25.07.17.
  */
-public abstract class Manageable<T extends DataSet> {
+public abstract class Manageable<T extends DataSet> implements DataSetDAO<T> {
 
 	protected final EntityManager em;
 	protected final Class<T> entityClass;
@@ -26,7 +29,10 @@ public abstract class Manageable<T extends DataSet> {
 	}
 
 	public void save(T dataSet) {
-		em.merge(dataSet);
+		 transactional(em -> {
+			 dataSet.setId(em.merge(dataSet).getId());
+			 return dataSet;
+		 });
 	}
 
 	public T read(long id){
