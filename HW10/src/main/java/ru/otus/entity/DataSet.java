@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @Data
 @MappedSuperclass
-public class DataSet {
+public abstract class DataSet {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

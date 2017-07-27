@@ -1,5 +1,7 @@
 package ru.otus.dao;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -32,13 +34,15 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 
 	protected abstract DataSetDAO<T> dao();
 
+	protected abstract void update(T dataSet);
+
 	@Test
 	public void shouldSaveEntity() {
 		//given
 		T dataSet = create();
 
 		//when
-		dao().save(dataSet);
+		dataSet = dao().save(dataSet);
 
 		//then
 		Assert.assertNotNull(dataSet.getId());
@@ -50,7 +54,7 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 		T dataSet = create();
 
 		//when
-		dao().save(dataSet);
+		dataSet = dao().save(dataSet);
 		T loaded = dao().read(dataSet.getId());
 
 		//then
@@ -58,15 +62,37 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 	}
 
 	@Test
-	public void shouldLoadAllSavedEntities() {
+	public void shouldUpdateEntity() {
 		//given
 		T dataSet = create();
 
 		//when
-		dao().save(dataSet);
+		dataSet = dao().save(dataSet);
+		update(dataSet);
+		DataSet updated = dao().save(dataSet);
+		T loaded = dao().read(dataSet.getId());
 
 		//then
-		Assert.assertTrue(dao().readAll().contains(dataSet));
+		Assert.assertEquals(dataSet.getId(), loaded.getId());
+		Assert.assertEquals(updated.getId(), loaded.getId());
+	}
+
+	@Test
+	public void shouldLoadAllSavedEntities() {
+		//given
+		T dataSet1 = create();
+		T dataSet2 = create();
+
+		//when
+		dataSet1 = dao().save(dataSet1);
+		dataSet2 = dao().save(dataSet2);
+
+		//then
+		List<T> dataSets = dao().readAll();
+		Assert.assertNotNull(dataSets);
+		Assert.assertTrue(!dataSets.isEmpty());
+		Assert.assertTrue(dataSets.contains(dataSet1));
+		Assert.assertTrue(dataSets.contains(dataSet2));
 	}
 }
 

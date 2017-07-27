@@ -1,7 +1,6 @@
 package ru.otus.dao;
 
 import ru.otus.entity.PhoneDataSet;
-import ru.otus.persistence.Manageable;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 /**
  * Created by egor on 25.07.17.
  */
-public class PhoneDataSetHibernateImpl extends Manageable<PhoneDataSet> implements PhoneDataSetDAO {
+public class PhoneDataSetHibernateImpl extends AbstractDataSetHibernateDAO<PhoneDataSet> implements PhoneDataSetDAO {
 
     public PhoneDataSetHibernateImpl(EntityManager em) {
         super(em, PhoneDataSet.class);

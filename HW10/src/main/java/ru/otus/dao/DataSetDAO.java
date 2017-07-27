@@ -12,7 +12,7 @@ public interface DataSetDAO<T extends DataSet> {
 
     String status();
 
-	void save(T dataSet);
+	T save(T dataSet);
 
 	T read(long id);
 

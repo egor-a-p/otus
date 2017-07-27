@@ -5,12 +5,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import ru.otus.entity.UserDataSet;
-import ru.otus.persistence.Manageable;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public class UserDataSetDAOHibernateImpl extends Manageable<UserDataSet> implements UserDataSetDAO {
+public class UserDataSetDAOHibernateImpl extends AbstractDataSetHibernateDAO<UserDataSet> implements UserDataSetDAO {
 
 	public UserDataSetDAOHibernateImpl(EntityManager em) {
 		super(em, UserDataSet.class);
