@@ -5,12 +5,21 @@ import java.util.*;
 public class MyArrayList<T> implements List<T>, RandomAccess {
 
     private static final int INITIAL_CAPACITY = 10;
+    private static final int FACTOR = 2;
 
     private Object[] array;
     private int size;
 
     public MyArrayList() {
-        array = new Object[INITIAL_CAPACITY];
+        this(INITIAL_CAPACITY);
+    }
+
+    public MyArrayList(int initialCapacity) {
+        array = new Object[initialCapacity];
+    }
+
+    private int capacity() {
+        return array.length;
     }
 
     @Override
@@ -35,7 +44,7 @@ public class MyArrayList<T> implements List<T>, RandomAccess {
 
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException();
+        return Arrays.copyOf(array, size);
     }
 
     @Override
@@ -45,7 +54,20 @@ public class MyArrayList<T> implements List<T>, RandomAccess {
 
     @Override
     public boolean add(T t) {
-        return false;
+        if (size == Integer.MAX_VALUE) {
+            return false;
+        }
+        if (size == capacity()) {
+            growUp();
+        }
+        array[size++] = t;
+        return true;
+    }
+
+    private void growUp() {
+        Object[] newArray = new Object[FACTOR * capacity()];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
     }
 
     @Override
@@ -84,13 +106,23 @@ public class MyArrayList<T> implements List<T>, RandomAccess {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        return (T) array[index];
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T set(int index, T element) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        Object current = array[index];
+        array[index] = element;
+        return (T) current;
     }
 
     @Override
@@ -115,7 +147,56 @@ public class MyArrayList<T> implements List<T>, RandomAccess {
 
     @Override
     public ListIterator<T> listIterator() {
-        return null;
+        return new ListIterator<T>() {
+
+            int index = -1;
+
+            @Override
+            public boolean hasNext() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public T next() {
+                return (T) array[++index];
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public T previous() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public int nextIndex() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public int previousIndex() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void set(T t) {
+                MyArrayList.this.set(index, t);
+            }
+
+            @Override
+            public void add(T t) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     @Override

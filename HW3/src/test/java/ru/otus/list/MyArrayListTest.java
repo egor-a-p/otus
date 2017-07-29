@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-/**
- * Created by egor on 29.07.17.
- */
 public class MyArrayListTest {
 
     @Test
@@ -40,20 +37,24 @@ public class MyArrayListTest {
         Collections.sort(myList, (i1, i2) -> Integer.compare(i2, i1));
 
         //then
-        IntStream.range(0, 100).map(i -> 99 - i).boxed().forEach(i -> Assert.assertEquals(i, myList.get(i)));
+        IntStream.range(0, 100).boxed().forEach(i -> Assert.assertEquals(Integer.valueOf(99 - i), myList.get(i)));
     }
 
     @Test
     public void copyTest() {
         //given
         List<Integer> myList = new MyArrayList<>();
-        IntStream.range(0, 100).forEach(myList::add);
-        List<Integer> dest = new ArrayList<>();
-        List<Integer> src = new MyArrayList<>();
+        List<Integer> dest = new ArrayList<>(100);
+        List<Integer> src = new MyArrayList<>(100);
+        IntStream.range(0, 100).forEach(i -> {
+            src.add(0);
+            dest.add(0);
+            myList.add(i);
+        });
 
         //when
         Collections.copy(src, myList);
-        Collections.copy(dest, src);
+        Collections.copy(dest, myList);
 
         //then
         IntStream.range(0, 100).boxed().forEach(i -> Assert.assertTrue(i.equals(myList.get(i)) &&
