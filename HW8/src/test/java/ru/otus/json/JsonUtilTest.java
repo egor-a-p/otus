@@ -1,15 +1,18 @@
 package ru.otus.json;
 
-import com.google.gson.Gson;
-import org.junit.Assert;
-import org.junit.Test;
-import ru.otus.json.vo.Group;
-import ru.otus.json.vo.User;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.simple.JSONValue;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.google.gson.Gson;
+
+import ru.otus.json.vo.Group;
+import ru.otus.json.vo.User;
 
 public class JsonUtilTest {
 
@@ -49,6 +52,54 @@ public class JsonUtilTest {
 
         //then
         Assert.assertEquals(gson.toJson(c), json);
+    }
+
+    @Test
+    public void shouldTransformWrapperChar() {
+        //given
+        Character c = 'c';
+
+        //when
+        String json = JsonUtil.toJson(c);
+
+        //then
+        Assert.assertEquals(gson.toJson(c), json);
+    }
+
+    @Test
+    public void shouldTransformPrimitiveDouble() {
+        //given
+        double d = 1.05;
+
+        //when
+        String json = JsonUtil.toJson(d);
+
+        //then
+        Assert.assertEquals(gson.toJson(d), json);
+    }
+
+    @Test
+    public void shouldTransformWrapperDouble() {
+        //given
+        Double d = 1.05;
+
+        //when
+        String json = JsonUtil.toJson(d);
+
+        //then
+        Assert.assertEquals(gson.toJson(d), json);
+    }
+
+    @Test
+    public void shouldTransformPrimitiveBoolean() {
+        //given
+        boolean b = true;
+
+        //when
+        String json = JsonUtil.toJson(b);
+
+        //then
+        Assert.assertEquals(gson.toJson(b), json);
     }
 
     @Test
@@ -111,6 +162,42 @@ public class JsonUtilTest {
         Assert.assertEquals(gson.toJson(strings), json);
     }
 
+	@Test
+	public void shouldTransformCollectionOfIntegers() {
+		//given
+		List<Integer> integers = Arrays.asList(1, 2, 3);
+
+		//when
+		String json = JsonUtil.toJson(integers);
+
+		//then
+		Assert.assertEquals(gson.toJson(integers), json);
+	}
+
+	@Test
+	public void shouldTransformCollectionOfArraysOfChars() {
+		//given
+		List<char[]> characters = Arrays.asList(new char[]{'a', 'b', 'c'}, new char[]{'c', 'd' , 'e'});
+
+		//when
+		String json = JsonUtil.toJson(characters);
+
+		//then
+		Assert.assertEquals(gson.toJson(characters), json);
+	}
+
+	@Test
+	public void shouldTransformCollectionOfCharacters() {
+		//given
+		List<Character> characters = Arrays.asList('a', 'b', 'c');
+
+		//when
+		String json = JsonUtil.toJson(characters);
+
+		//then
+		Assert.assertEquals(gson.toJson(characters), json);
+	}
+
     @Test
     public void shouldTransformMap() {
         //given
@@ -146,7 +233,7 @@ public class JsonUtilTest {
         group.setSomeNumbers(new Integer[]{1, 2, 3, 4});
         group.setUsers(Arrays.asList(user1, user2));
 
-        Assert.assertEquals(new Gson().toJson(group), JsonUtil.toJson(group));
+        Assert.assertEquals(JSONValue.parse(new Gson().toJson(group)), JSONValue.parse(JsonUtil.toJson(group)));
 
     }
 }

@@ -1,120 +1,107 @@
 package ru.otus.json;
 
-import lombok.val;
-import org.apache.commons.lang3.ClassUtils;
-
-import javax.json.*;
-import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
-import java.util.Objects;
+
+import javax.json.JsonException;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
+import lombok.val;
 
 public class JsonUtil {
 
-    public static String SIMPLE_FORMAT = "\"%s\"";
-
     public static String toJson(Object object) {
         if (object == null) {
-            return JsonObject.NULL.toString();
+            return JSONValue.toJSONString(null);
         }
-        switch (Type.getType(object)) {
-
-            case PRIMITIVE:
-                return String.valueOf(object);
-            case STRING:
-                return String.format(SIMPLE_FORMAT, String.valueOf(object));
-            case ARRAY_OF_PRIMITIVES:
-                val arrayBuilder = Json.createArrayBuilder();
-                for (int i = 0; i < Array.getLength(object); i++) {
-                    arrayBuilder.add(String.valueOf(Array.get(object, i)));
-                }
-                val writer = new StringWriter();
-                Json.createWriter(writer).writeArray(arrayBuilder.build());
-                return writer.toString();
-            case ITERABLE:
-                return "";
-            case MAP:
-                return "";
-            default:
-                return "";
-
+        if (isSimple(object)) {
+            return simpleToJSON(object);
         }
+	    if (isArray(object)) {
+		    return arrayToJSON(object);
+	    }
+	    if (isIterable(object)) {
+		    return iterableToJSON(object);
+	    }
+	    if (isMap(object)) {
+		    return mapToJSON(object);
+	    }
+        return objectToJson(object);
     }
 
-    public enum Type {
-        STRING,
-        PRIMITIVE,
-        ARRAY_OF_PRIMITIVES,
-        ITERABLE,
-        MAP,
-        OBJECT;
-
-        public static final Type getType(Object o) {
-            Objects.requireNonNull(o);
-            if (ClassUtils.isPrimitiveOrWrapper(o.getClass())) {
-                return PRIMITIVE;
-            }
-            if (String.class == o.getClass()) {
-                return STRING;
-            }
-            if (o.getClass().isArray() && ClassUtils.isPrimitiveOrWrapper(o.getClass().getComponentType())) {
-                return ARRAY_OF_PRIMITIVES;
-            }
-            if (o instanceof Iterable) {
-                return ITERABLE;
-            }
-            if (o instanceof Map) {
-                return MAP;
-            }
-            return OBJECT;
-        }
+	private static boolean isSimple(Object o) {
+        return ClassUtils.isPrimitiveOrWrapper(o.getClass()) || o.getClass() == String.class;
     }
 
-    private static JsonObjectBuilder map(Object object, JsonObjectBuilder builder) {
+	private static boolean isArray(Object o) {
+		return o.getClass().isArray();
+	}
+
+	private static boolean isIterable(Object o) {
+		return o instanceof Iterable;
+	}
+
+	private static boolean isMap(Object o) {
+		return o instanceof Map;
+	}
+
+    private static String simpleToJSON(Object object) {
+        if (object.getClass() == char.class || object.getClass() == Character.class) {
+            object = String.valueOf(object);
+        }
+        return JSONValue.toJSONString(object);
+    }
+
+    @SuppressWarnings("unchecked")
+	private static String arrayToJSON(Object object) {
+		val jsonArray = new JSONArray();
+		for (int i = 0; i < Array.getLength(object); i++) {
+			jsonArray.add(JSONValue.parse(toJson(Array.get(object, i))));
+		}
+		return jsonArray.toJSONString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static String iterableToJSON(Object object) {
+		val jsonArray = new JSONArray();
+		for (Object o : (Iterable) object) {
+			jsonArray.add(JSONValue.parse(toJson(o)));
+		}
+		return jsonArray.toJSONString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static String mapToJSON(Object object) {
+		val jsonObject = new JSONObject();
+		((Map) object).forEach((k, v) -> {
+			jsonObject.put(JSONValue.parse(toJson(k)), JSONValue.parse(toJson(v)));
+		});
+		return jsonObject.toJSONString();
+	}
+
+
+	@SuppressWarnings("unchecked")
+    private static String objectToJson(Object object) {
         try {
+	        val jsonObject = new JSONObject();
             for (Class c = object.getClass(); c != null; c = c.getSuperclass()) {
-                for (Field field : c.getDeclaredFields()) {
-                    if (Modifier.isTransient(field.getModifiers())) {
-                        continue;
-                    }
+	            for (Field field : c.getDeclaredFields()) {
+		            if (Modifier.isTransient(field.getModifiers())) {
+			            continue;
+		            }
 
-                    field.setAccessible(true);
-                    Object fieldValue = field.get(object);
-                    if (ClassUtils.isPrimitiveOrWrapper(field.getType()) || fieldValue instanceof String) {
-                        builder.add(field.getName(), String.valueOf(fieldValue));
-                        continue;
-                    }
-                    if (field.getType().isArray()) {
-                        val arrayBuilder = Json.createArrayBuilder();
-                        for (int i = 0; i < Array.getLength(fieldValue); i++) {
-                            Object iValue = Array.get(fieldValue, i);
-                            if (ClassUtils.isPrimitiveOrWrapper(iValue.getClass()) || iValue instanceof String) {
-                                arrayBuilder.add(String.valueOf(iValue));
-                            } else {
-                                arrayBuilder.add(map(iValue, Json.createObjectBuilder()).build());
-                            }
-                        }
-                        builder.add(field.getName(), arrayBuilder);
-                        continue;
-                    }
-                    if (fieldValue instanceof Iterable) {
-                        val arrayBuilder = Json.createArrayBuilder();
-                        for (Object o : (Iterable) fieldValue) {
-                            if (ClassUtils.isPrimitiveOrWrapper(o.getClass()) || o instanceof String) {
-                                arrayBuilder.add(String.valueOf(o));
-                            } else {
-                                arrayBuilder.add(map(o, Json.createObjectBuilder()).build());
-                            }
-                        }
-                        builder.add(field.getName(), arrayBuilder);
-                        continue;
-                    }
-                    builder.add(field.getName(), map(fieldValue, Json.createObjectBuilder()));
-                }
+		            field.setAccessible(true);
+		            Object fieldValue = field.get(object);
+		            jsonObject.put(field.getName(), JSONValue.parse(toJson(fieldValue)));
+	            }
             }
-            return builder;
+	        return jsonObject.toJSONString();
         } catch (Exception e) {
             throw new JsonException("Can't create json object:", e);
         }
