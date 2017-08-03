@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-import javax.json.JsonException;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -103,7 +101,7 @@ public class JsonUtil {
             }
 	        return jsonObject.toJSONString();
         } catch (Exception e) {
-            throw new JsonException("Can't create json object:", e);
+            throw new RuntimeException("Can't create json object:", e);
         }
     }
 
