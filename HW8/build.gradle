@@ -1,6 +1,6 @@
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.6',
-            'org.glassfish:javax.json:1.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1',
+            'org.apache.commons:commons-lang3:3.6'
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
     testCompile 'com.google.code.gson:gson:2.8.1'
