@@ -4,5 +4,6 @@ dependencies {
             'org.glassfish:javax.json:1.1'
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
+    testCompile 'com.google.code.gson:gson:2.8.1'
     testCompileOnly 'org.projectlombok:lombok:1.16.16'
 }

@@ -1,28 +1,75 @@
-package ru.otus.json.util;
+package ru.otus.json;
 
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
 
 import javax.json.*;
-import javax.json.stream.JsonGenerator;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 
 public class JsonUtil {
 
-    private static final JsonWriterFactory FACTORY = Json.createWriterFactory(
-            Collections.singletonMap(
-                    JsonGenerator.PRETTY_PRINTING, true));
+    public static String SIMPLE_FORMAT = "\"%s\"";
 
-    public static <T> String transform(T instance) {
-        StringWriter writer = new StringWriter();
-        try(JsonWriter jsonWriter = FACTORY.createWriter(writer)) {
-            jsonWriter.writeObject(map(instance, Json.createObjectBuilder()).build());
+    public static String toJson(Object object) {
+        if (object == null) {
+            return JsonObject.NULL.toString();
         }
-        return writer.toString();
+        switch (Type.getType(object)) {
+
+            case PRIMITIVE:
+                return String.valueOf(object);
+            case STRING:
+                return String.format(SIMPLE_FORMAT, String.valueOf(object));
+            case ARRAY_OF_PRIMITIVES:
+                val arrayBuilder = Json.createArrayBuilder();
+                for (int i = 0; i < Array.getLength(object); i++) {
+                    arrayBuilder.add(String.valueOf(Array.get(object, i)));
+                }
+                val writer = new StringWriter();
+                Json.createWriter(writer).writeArray(arrayBuilder.build());
+                return writer.toString();
+            case ITERABLE:
+                return "";
+            case MAP:
+                return "";
+            default:
+                return "";
+
+        }
+    }
+
+    public enum Type {
+        STRING,
+        PRIMITIVE,
+        ARRAY_OF_PRIMITIVES,
+        ITERABLE,
+        MAP,
+        OBJECT;
+
+        public static final Type getType(Object o) {
+            Objects.requireNonNull(o);
+            if (ClassUtils.isPrimitiveOrWrapper(o.getClass())) {
+                return PRIMITIVE;
+            }
+            if (String.class == o.getClass()) {
+                return STRING;
+            }
+            if (o.getClass().isArray() && ClassUtils.isPrimitiveOrWrapper(o.getClass().getComponentType())) {
+                return ARRAY_OF_PRIMITIVES;
+            }
+            if (o instanceof Iterable) {
+                return ITERABLE;
+            }
+            if (o instanceof Map) {
+                return MAP;
+            }
+            return OBJECT;
+        }
     }
 
     private static JsonObjectBuilder map(Object object, JsonObjectBuilder builder) {

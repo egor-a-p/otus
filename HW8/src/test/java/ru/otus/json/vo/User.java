@@ -1,4 +1,4 @@
-package ru.otus.json.util.vo;
+package ru.otus.json.vo;
 
 import lombok.Data;
 
