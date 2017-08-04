@@ -7,24 +7,29 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import lombok.EqualsAndHashCode;
 import ru.otus.atm.banknote.Banknote;
 import ru.otus.atm.banknote.Denomination;
 
 /**
  * @author e.petrov. Created 08 - 2017.
  */
+@EqualsAndHashCode(exclude = {"balance", "cashStorage"})
 class CashMachineImpl implements CashMachine {
-
-	private static Set<Banknote> asSet(Banknote... banknotes) {
-		return new HashSet<>(Arrays.asList(banknotes));
-	}
-
 	private final Map<Denomination, Set<Banknote>> cashStorage;
 	private int balance;
+	private final UUID uuid;
 
 	CashMachineImpl() {
 		this.cashStorage = new TreeMap<>((d1, d2) -> Integer.compare(d2.amount, d1.amount));
+		this.uuid = UUID.randomUUID();
+	}
+
+	private static Set<Banknote> asSet(Banknote... banknotes) {
+		return new HashSet<>(Arrays.asList(banknotes));
 	}
 
 	@Override
@@ -69,7 +74,10 @@ class CashMachineImpl implements CashMachine {
 	}
 
 	@Override
-	public void clear() {
+	public Set<Banknote> clear() {
+		Set<Banknote> banknotes = cashStorage.entrySet().stream().flatMap(e -> e.getValue().stream()).collect(Collectors.toSet());
 		cashStorage.clear();
+		balance = 0;
+		return banknotes;
 	}
 }

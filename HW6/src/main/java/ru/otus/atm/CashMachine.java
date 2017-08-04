@@ -15,7 +15,7 @@ public interface CashMachine {
 
 	int balance();
 
-	void clear();
+	Set<Banknote> clear();
 
 	static CashMachine newInstance() {
 		return new CashMachineImpl();
