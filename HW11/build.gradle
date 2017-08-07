@@ -1,7 +1,8 @@
 dependencies {
     compile 'org.hibernate:hibernate-core:5.2.10.Final',
-            'org.slf4j:slf4j-simple:1.7.25'
-
+            'org.slf4j:slf4j-simple:1.7.25',
+            'com.google.guava:guava:22.0',
+            project(':HW2')
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
 
