@@ -1,0 +1,37 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+        version="2.0">
+    <persistence-unit name="users_pu" transaction-type="RESOURCE_LOCAL">
+        <class>ru.otus.entity.PhoneDataSet</class>
+        <class>ru.otus.entity.AddressDataSet</class>
+        <class>ru.otus.entity.UserDataSet</class>
+        <properties>
+            <!-- Simple Connection -->
+            <!--
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.connection.username" value="postgres"/>
+            <property name="hibernate.connection.password" value="postgres"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/userdb"/>
+            -->
+            <!-- Simple Connection -->
+
+            <!-- SQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!--
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            -->
+            <!-- SQL -->
+
+            <!-- Connection Pool -->
+            <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+            <property name="hibernate.hikari.dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
+            <property name="hibernate.hikari.dataSource.url" value="jdbc:postgresql://localhost:5432/userdb" />
+            <property name="hibernate.hikari.username" value="postgres" />
+            <property name="hibernate.hikari.password" value="postgres" />
+            <!-- Connection Pool -->
+        </properties>
+    </persistence-unit>
+</persistence>
