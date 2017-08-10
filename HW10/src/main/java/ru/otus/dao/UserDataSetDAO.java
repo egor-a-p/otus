@@ -1,12 +1,12 @@
 package ru.otus.dao;
 
-import ru.otus.entity.UserDataSet;
+import ru.otus.entity.UserEntity;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public interface UserDataSetDAO extends DataSetDAO<UserDataSet> {
+public interface UserDataSetDAO extends DataSetDAO<UserEntity> {
 
-	UserDataSet readByName(String name);
+	UserEntity readByName(String name);
 
 }

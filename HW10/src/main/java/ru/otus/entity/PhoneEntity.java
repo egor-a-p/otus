@@ -8,24 +8,18 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-/**
- * @author e.petrov. Created 07 - 2017.
- */
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @ToString(callSuper = true, exclude = {"user"})
+@EqualsAndHashCode(callSuper = true, exclude = {"user"})
 @Table(name = "phone")
 @NamedQueries({
-		@NamedQuery(name = "PhoneDataSet.readAll", query = "SELECT p FROM PhoneDataSet p"),
-		@NamedQuery(name = "PhoneDataSet.readByCode", query = "SELECT p FROM PhoneDataSet p WHERE p.code = :code")
+		@NamedQuery(name = "PhoneDataSet.readAll", query = "SELECT p FROM PhoneEntity p"),
+		@NamedQuery(name = "PhoneDataSet.readByCode", query = "SELECT p FROM PhoneEntity p WHERE p.code = :code")
 })
-public class PhoneDataSet extends DataSet {
+public class PhoneEntity extends BaseEntity {
 
 	@Column(name = "code")
 	private int code;
@@ -35,5 +29,5 @@ public class PhoneDataSet extends DataSet {
 
 	@ManyToOne
 	@PrimaryKeyJoinColumn
-	private UserDataSet user;
+	private UserEntity user;
 }

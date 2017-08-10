@@ -2,13 +2,13 @@ package ru.otus.dao;
 
 import java.util.List;
 
-import ru.otus.entity.DataSet;
+import ru.otus.entity.BaseEntity;
 
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public interface DataSetDAO<T extends DataSet> {
+public interface DataSetDAO<T extends BaseEntity> {
 
     String status();
 

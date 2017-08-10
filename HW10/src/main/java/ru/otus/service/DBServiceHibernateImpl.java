@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.dao.UserDataSetDAO;
 import ru.otus.dao.UserDataSetDAOHibernateImpl;
-import ru.otus.entity.UserDataSet;
+import ru.otus.entity.UserEntity;
 import ru.otus.persistence.PersistenceUnit;
 
 /**
@@ -31,19 +31,19 @@ public class DBServiceHibernateImpl implements UserDBService {
 	}
 
 	@Override
-	public void save(UserDataSet dataSet) {
+	public void save(UserEntity dataSet) {
 		log.debug("save: {}", dataSet);
 		userDataSetDAO.save(dataSet);
 	}
 
 	@Override
-	public UserDataSet read(long id) {
+	public UserEntity read(long id) {
 		log.debug("read by id: {}", id);
 		return userDataSetDAO.read(id);
 	}
 
 	@Override
-	public List<UserDataSet> readAll() {
+	public List<UserEntity> readAll() {
 		log.debug("readAll");
 		return userDataSetDAO.readAll();
 	}
@@ -55,7 +55,7 @@ public class DBServiceHibernateImpl implements UserDBService {
 	}
 
 	@Override
-	public UserDataSet readByName(String name) {
+	public UserEntity readByName(String name) {
 		log.debug("readByName: {}", name);
 		return userDataSetDAO.readByName(name);
 	}

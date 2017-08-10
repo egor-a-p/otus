@@ -9,13 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-import ru.otus.entity.DataSet;
+import ru.otus.entity.BaseEntity;
 import ru.otus.persistence.PersistenceUnit;
 
 /**
  * Created by egor on 25.07.17.
  */
-public abstract class AbstractDAOTest<T extends DataSet> {
+public abstract class AbstractDAOTest<T extends BaseEntity> {
 
 	@BeforeClass
 	public static void initialize() {
@@ -69,7 +69,7 @@ public abstract class AbstractDAOTest<T extends DataSet> {
 		//when
 		dataSet = dao().save(dataSet);
 		update(dataSet);
-		DataSet updated = dao().save(dataSet);
+		BaseEntity updated = dao().save(dataSet);
 		T loaded = dao().read(dataSet.getId());
 
 		//then

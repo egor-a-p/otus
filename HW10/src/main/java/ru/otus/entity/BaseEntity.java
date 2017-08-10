@@ -8,12 +8,9 @@ import javax.persistence.MappedSuperclass;
 
 import lombok.Data;
 
-/**
- * @author e.petrov. Created 07 - 2017.
- */
 @Data
 @MappedSuperclass
-public abstract class DataSet {
+public abstract class BaseEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

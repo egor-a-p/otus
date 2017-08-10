@@ -1,0 +1,8 @@
+dependencies {
+    compile project(':HW10')
+
+    compileOnly 'org.projectlombok:lombok:1.16.16'
+}
+test {
+    testLogging.showStandardStreams = true
+}
