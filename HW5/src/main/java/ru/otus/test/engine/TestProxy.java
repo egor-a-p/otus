@@ -1,18 +1,15 @@
 package ru.otus.test.engine;
 
-import java.lang.annotation.Annotation;
+import ru.otus.test.api.After;
+import ru.otus.test.api.Before;
+import ru.otus.test.api.Test;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import ru.otus.test.api.After;
-import ru.otus.test.api.Before;
-import ru.otus.test.api.Test;
 
 
 public class TestProxy {
@@ -52,32 +49,12 @@ public class TestProxy {
 	    }
     }
 
-    private static void checkAndAdd(Map<Class<? extends Annotation>, List<Method>> annotatedMethods, Method method) {
-        if (method.isAnnotationPresent(Before.class) && checkMethodArgs(method)) {
-            annotatedMethods.get(Before.class).add(method);
-        }
-        if (method.isAnnotationPresent(Test.class) && checkMethodArgs(method)) {
-            annotatedMethods.get(Test.class).add(method);
-        }
-        if (method.isAnnotationPresent(After.class) && checkMethodArgs(method)) {
-            annotatedMethods.get(After.class).add(method);
-        }
-    }
-
     private static boolean checkMethodArgs(Method method) {
 	    Objects.requireNonNull(method, "Test class method is null!");
         if (method.getParameters().length != 0) {
             throw new UnsupportedOperationException("Method contains args!");
         }
         return true;
-    }
-
-    private static Map<Class<? extends Annotation>, List<Method>> createMap() {
-        Map<Class<? extends Annotation>, List<Method>> map = new ConcurrentHashMap<>();
-        map.put(Before.class, new ArrayList<>());
-        map.put(Test.class, new ArrayList<>());
-        map.put(After.class, new ArrayList<>());
-        return map;
     }
 
     private final List<Method> beforeMethods;
