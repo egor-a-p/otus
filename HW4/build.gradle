@@ -1,6 +1,0 @@
-dependencies {
-    compile 'org.slf4j:slf4j-simple:1.7.25',
-            'org.apache.commons:commons-lang3:3.6'
-
-    compileOnly 'org.projectlombok:lombok:1.16.16'
-}
