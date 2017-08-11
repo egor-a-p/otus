@@ -6,7 +6,7 @@ import ru.otus.entity.UserEntity;
 /**
  * author: egor, created: 08.08.17.
  */
-public interface UserService extends CachingService<UserEntity, Long> {
+public interface UserService extends Service<UserEntity, Long> {
 
     Iterable<UserEntity> loadByName(String name);
 

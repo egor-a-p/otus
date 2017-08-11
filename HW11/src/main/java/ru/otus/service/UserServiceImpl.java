@@ -2,10 +2,11 @@ package ru.otus.service;
 
 import ru.otus.cache.Cache;
 import ru.otus.entity.UserEntity;
-import ru.otus.repository.Repository;
 import ru.otus.repository.UserRepository;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * author: egor, created: 09.08.17.
@@ -24,22 +25,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Iterable<UserEntity> loadByName(String name) {
-        return userRepository.findByName(name);
+        return null;
     }
 
     @Override
     public UserEntity save(UserEntity entity) {
-        return userRepository.save(entity);
+        Objects.requireNonNull(entity);
+        UserEntity result;
+        cache.put((result = userRepository.save(entity)).getId(), result);
+        return result;
     }
 
     @Override
     public Iterable<UserEntity> save(Iterable<UserEntity> entities) {
-        return userRepository.save(entities);
+        return StreamSupport.stream(userRepository.save(entities).spliterator(), false)
+                .map(e -> cache.replace(e.getId(), old -> e))
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserEntity load(Long id) {
-        return userRepository.findOne(id);
+        return cache.computeIfAbsent(id, userRepository::findOne);
     }
 
     @Override
@@ -68,15 +74,5 @@ public class UserServiceImpl implements UserService {
     public boolean delete(Long id) {
         userRepository.delete(id);
         return true;
-    }
-
-    @Override
-    public Cache<Long, UserEntity> cache() {
-        return cache;
-    }
-
-    @Override
-    public Repository<UserEntity, Long> repository() {
-        return userRepository;
     }
 }
