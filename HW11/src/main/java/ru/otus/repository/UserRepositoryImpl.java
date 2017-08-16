@@ -48,9 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Iterable<UserEntity> findAll(Iterable<Long> longs) {
+    public Iterable<UserEntity> findAll(Iterable<? extends Long> ids) {
         return em.createQuery("SELECT u FROM UserEntity u WHERE u.id IN (:ids)", UserEntity.class)
-                .setParameter("ids", longs)
+                .setParameter("ids", ids)
                 .getResultList();
     }
 

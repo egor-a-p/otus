@@ -19,7 +19,7 @@ public interface Repository<E, ID extends Serializable> extends Iterable<E> {
 
     Iterable<E> findAll();
 
-    Iterable<E> findAll(Iterable<ID> ids);
+    Iterable<E> findAll(Iterable<? extends ID> ids);
 
     long size();
 

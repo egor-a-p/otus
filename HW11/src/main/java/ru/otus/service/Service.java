@@ -1,7 +1,11 @@
 package ru.otus.service;
 
 
+import com.google.common.cache.CacheStats;
+
 import java.io.Serializable;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 /**
@@ -11,17 +15,26 @@ public interface Service<E, ID extends Serializable> {
 
     E save(E entity);
 
-    Iterable<E> save(Iterable<E> entities);
+    default Iterable<E> save(Iterable<E> entities) {
+        return StreamSupport.stream(entities.spliterator(), false).map(this::save).collect(Collectors.toList());
+    }
 
     E load(ID id);
 
-    Iterable<E> load(Iterable<ID> ids);
+    default Iterable<E> load(Iterable<ID> ids) {
+        return StreamSupport.stream(ids.spliterator(), false).map(this::load).collect(Collectors.toList());
+    }
 
     Iterable<E> loadAll();
 
-    boolean delete(E entity);
+    void delete(E entity);
 
-    boolean delete(Iterable<E> entities);
+    default void delete(Iterable<E> entities) {
+        entities.forEach(this::delete);
+    }
 
-    boolean delete(ID id);
+    void delete(ID id);
+
+    void deleteAll();
+
 }

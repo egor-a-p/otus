@@ -1,5 +1,6 @@
 dependencies {
-    compile project(':HW10')
+    compile project(':HW10'),
+            'com.google.guava:guava:23.0'
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
 }
