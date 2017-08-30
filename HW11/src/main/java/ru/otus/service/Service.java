@@ -33,8 +33,4 @@ public interface Service<E, ID extends Serializable> {
         entities.forEach(this::delete);
     }
 
-    void delete(ID id);
-
-    void deleteAll();
-
 }

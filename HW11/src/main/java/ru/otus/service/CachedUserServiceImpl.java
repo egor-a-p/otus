@@ -65,7 +65,6 @@ public class CachedUserServiceImpl implements CachedUserService {
                 cache.invalidate(entity.getId());
             }
             entity = userRepository.save(entity);
-            cache.put(entity.getId(), entity);
             return entity;
         } catch (Exception e) {
             log.error("Can't save user " + entity, e);
@@ -107,28 +106,12 @@ public class CachedUserServiceImpl implements CachedUserService {
 
     @Override
     public void delete(UserEntity entity) {
-        if (entity == null) {
-            log.error("Can't delete user, entity is null!");
+        if (entity == null || entity.getId() == null) {
+            log.error("Can't delete user, entity or id is null!");
             return;
         }
-        delete(entity.getId());
-    }
-
-    @Override
-    public void delete(Long id) {
-        try {
-            Objects.requireNonNull(id);
-            cache.invalidate(id);
-            userRepository.delete(id);
-        } catch (Exception e) {
-            log.error("Can't delete by id " + id, e);
-        }
-    }
-
-    @Override
-    public void deleteAll() {
-        cache.invalidateAll();
-        userRepository.clear();
+        cache.invalidate(entity.getId());
+        userRepository.delete(entity);
     }
 
     @Override
