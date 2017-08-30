@@ -1,7 +1,11 @@
 dependencies {
-    compile project(':HW10')
+    compile project(':HW10'),
+            'com.google.guava:guava:23.0'
 
     compileOnly 'org.projectlombok:lombok:1.16.16'
+    testCompile 'org.hamcrest:hamcrest-all:1.3',
+                'org.mockito:mockito-all:1.10.19'
+
 }
 test {
     testLogging.showStandardStreams = true

@@ -28,7 +28,7 @@
             <!-- Connection Pool -->
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
             <property name="hibernate.hikari.dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
-            <property name="hibernate.hikari.dataSource.url" value="jdbc:postgresql://localhost:5432/userdb" />
+            <property name="hibernate.hikari.dataSource.url" value="jdbc:postgresql://localhost:5432/otus" />
             <property name="hibernate.hikari.username" value="postgres" />
             <property name="hibernate.hikari.password" value="postgres" />
             <!-- Connection Pool -->

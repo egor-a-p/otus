@@ -1,6 +1,5 @@
 package ru.otus.repository;
 
-import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.Iterator;
 
@@ -19,17 +18,13 @@ public interface Repository<E, ID extends Serializable> extends Iterable<E> {
 
     Iterable<E> findAll();
 
-    Iterable<E> findAll(Iterable<ID> ids);
+    Iterable<E> findAll(Iterable<? extends ID> ids);
 
     long size();
-
-    void delete(ID id);
 
     void delete(E entity);
 
     void delete(Iterable<E> entities);
-
-    void clear();
 
     @Override
     default Iterator<E> iterator() {
