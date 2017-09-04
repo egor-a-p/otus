@@ -1,14 +1,20 @@
 package ru.otus.service;
 
-import com.google.common.cache.*;
-import lombok.extern.slf4j.Slf4j;
-import ru.otus.entity.UserEntity;
-import ru.otus.repository.UserRepository;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.CacheStats;
+import com.google.common.cache.LoadingCache;
+
+import lombok.extern.slf4j.Slf4j;
+import ru.otus.entity.UserEntity;
+import ru.otus.repository.UserRepository;
 
 /**
  * author: egor, created: 09.08.17.
@@ -25,11 +31,7 @@ public class CachedUserServiceImpl implements CachedUserService {
         this.cache = CacheBuilder.newBuilder()
                 .softValues()
                 .recordStats()
-                .removalListener(n -> {
-                    if (log.isDebugEnabled() && RemovalCause.COLLECTED == n.getCause()) {
-                        log.debug("GC collect entity!");
-                    }
-                })
+                .removalListener(n -> log.debug("Removal cause {}", n.getCause()))
                 .build(new CacheLoader<Long, UserEntity>() {
                     @Override
                     public UserEntity load(Long key) throws Exception {
