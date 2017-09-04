@@ -1,12 +1,6 @@
 package ru.otus.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.*;
 
@@ -28,6 +22,6 @@ public class PhoneEntity extends BaseEntity {
 	private String number;
 
 	@ManyToOne
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name = "user_id")
 	private UserEntity user;
 }

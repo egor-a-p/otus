@@ -48,9 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Iterable<UserEntity> findAll(Iterable<Long> longs) {
+    public Iterable<UserEntity> findAll(Iterable<? extends Long> ids) {
         return em.createQuery("SELECT u FROM UserEntity u WHERE u.id IN (:ids)", UserEntity.class)
-                .setParameter("ids", longs)
+                .setParameter("ids", ids)
                 .getResultList();
     }
 
@@ -68,25 +68,18 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        acceptInTransaction(em -> em.createQuery("DELETE FROM UserEntity u WHERE u.id = :id")
-                .setParameter("id", id)
-                .executeUpdate());
-    }
-
-    @Override
     public void delete(UserEntity entity) {
         delete(Collections.singleton(entity));
     }
 
     @Override
     public void delete(Iterable<UserEntity> entities) {
-        acceptInTransaction(em -> entities.forEach(em::remove));
-    }
-
-    @Override
-    public void clear() {
-        acceptInTransaction(em -> em.createQuery("DELETE FROM UserEntity").executeUpdate());
+        acceptInTransaction(em -> entities.forEach(e -> {
+            if (e.getPhones() != null) {
+                e.getPhones().clear();
+            }
+            em.remove(e);
+        }));
     }
 
     @Override
