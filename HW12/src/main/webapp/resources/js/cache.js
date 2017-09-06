@@ -7,6 +7,7 @@ const HIT_COUNT_KEY = "HIT_COUNT_KEY";
 const MISS_COUNT_KEY = "MISS_COUNT_KEY";
 const LOAD_COUNT_KEY = "LOAD_COUNT_KEY";
 const EVICTION_COUNT_KEY = "EVICTION_COUNT_KEY";
+const SIZE_KEY = "SIZE_KEY";;
 
 function login() {
     hideAlert();
@@ -59,6 +60,7 @@ function close() {
 }
 
 function updateStats(arr) {
+    document.getElementById('cacheSize').textContent = arr[SIZE_KEY];
     document.getElementById('hitCount').textContent = arr[HIT_COUNT_KEY];
     document.getElementById('missCount').textContent = arr[MISS_COUNT_KEY];
     document.getElementById('loadCount').textContent = arr[LOAD_COUNT_KEY];
