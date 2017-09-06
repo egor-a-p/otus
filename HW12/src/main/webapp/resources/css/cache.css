@@ -36,6 +36,13 @@ body {
     border-top-right-radius: 0;
 }
 
+.alert {
+    display: none;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 .badge {
     font-size: 1.2em;
     background: lightgrey;
@@ -43,7 +50,7 @@ body {
 }
 
 .cachePanel {
-    /*display: none;*/
+    display: none;
     max-width: 330px;
     padding: 15px;
     margin: 0 auto;

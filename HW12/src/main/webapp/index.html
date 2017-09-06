@@ -13,7 +13,7 @@
 
 <div class="container">
 
-    <div class="loginPanel">
+    <div class="loginPanel" id="loginPanel">
         <h2 class="login-heading">Login:</h2><br>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
@@ -22,7 +22,11 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="login()">Sign in</button>
     </div>
 
-    <div class="cachePanel">
+    <div class="alert alert-danger" id="alert">
+        <strong><span id="failureMessage"></span></strong>
+    </div>
+
+    <div class="cachePanel" id="cachePanel">
         <h2 class="cache-heading">Cache stats:</h2><br>
         <div class="cache-stats">
             <h4>Hit count:</h4>
