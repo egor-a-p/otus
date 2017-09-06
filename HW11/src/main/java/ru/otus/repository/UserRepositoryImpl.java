@@ -1,12 +1,13 @@
 package ru.otus.repository;
 
-import ru.otus.entity.UserEntity;
-
-import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
+import javax.persistence.EntityManager;
+
+import ru.otus.entity.UserEntity;
 
 /**
  * author: egor, created: 08.08.17.
@@ -55,10 +56,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Iterable<UserEntity> findByName(String name) {
+    public UserEntity findByName(String name) {
         return em.createQuery("SELECT u FROM UserEntity u WHERE u.name = :name", UserEntity.class)
                 .setParameter("name", name)
-                .getResultList();
+                .getSingleResult();
     }
 
     @Override

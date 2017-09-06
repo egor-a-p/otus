@@ -7,6 +7,6 @@ import ru.otus.entity.UserEntity;
  */
 public interface UserRepository extends JPARepository<UserEntity, Long> {
 
-    Iterable<UserEntity> findByName(String name);
+    UserEntity findByName(String name);
 
 }

@@ -1,20 +1,28 @@
 package ru.otus.repository;
 
-import org.junit.*;
-import org.junit.rules.TestName;
-import ru.otus.entity.AddressEntity;
-import ru.otus.entity.PhoneEntity;
-import ru.otus.entity.UserEntity;
-import ru.otus.persistence.PersistenceUnit;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+
+import ru.otus.entity.AddressEntity;
+import ru.otus.entity.PhoneEntity;
+import ru.otus.entity.UserEntity;
+import ru.otus.persistence.PersistenceUnit;
+
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -65,11 +73,11 @@ public class UserRepositoryTest {
 
         //when
         UserEntity loadedById = repository.findOne(saved.getId());
-        Iterable<UserEntity> loadedByName = repository.findByName(saved.getName());
+        UserEntity loadedByName = repository.findByName(saved.getName());
 
         //then
         assertEquals(saved, loadedById);
-        assertThat(loadedByName, containsInAnyOrder(saved));
+        assertEquals(loadedByName, saved);
 
         repository.delete(saved);
     }

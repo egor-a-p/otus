@@ -13,9 +13,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
@@ -28,7 +31,7 @@ import org.hibernate.annotations.OnDeleteAction;
 })
 public class UserEntity extends BaseEntity {
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 
 	@OneToOne(cascade = CascadeType.ALL)
