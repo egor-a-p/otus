@@ -1,5 +1,10 @@
 package ru.otus.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
+
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -8,18 +13,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import ru.otus.entity.UserEntity;
 import ru.otus.repository.UserRepository;
 import ru.otus.repository.UserRepositoryTest;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * author: egor, created: 30.08.17.
@@ -31,7 +39,7 @@ public class UserServiceTest {
     private UserRepository repository;
 
     @InjectMocks
-    private CachedUserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Rule
     public TestName testName = new TestName();
@@ -82,7 +90,7 @@ public class UserServiceTest {
         UserEntity cached = userService.load(user.getId());
 
         //then
-        verify(repository, times(1)).findOne(user.getId());
+        verify(repository, never()).findOne(user.getId());
         assertEquals(user, loaded);
         assertEquals(cached, loaded);
     }
