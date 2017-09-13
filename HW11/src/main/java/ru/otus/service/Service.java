@@ -1,7 +1,6 @@
 package ru.otus.service;
 
 
-import com.google.common.cache.CacheStats;
 
 import java.io.Serializable;
 import java.util.stream.Collectors;
@@ -21,9 +20,7 @@ public interface Service<E, ID extends Serializable> {
 
     E load(ID id);
 
-    default Iterable<E> load(Iterable<ID> ids) {
-        return StreamSupport.stream(ids.spliterator(), false).map(this::load).collect(Collectors.toList());
-    }
+    Iterable<E> load(Iterable<ID> ids);
 
     Iterable<E> loadAll();
 
