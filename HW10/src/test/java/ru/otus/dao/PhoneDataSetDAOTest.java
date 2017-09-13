@@ -5,19 +5,19 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ru.otus.entity.PhoneDataSet;
+import ru.otus.entity.PhoneEntity;
 import ru.otus.persistence.PersistenceUnit;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public class PhoneDataSetDAOTest extends AbstractDAOTest<PhoneDataSet> {
+public class PhoneDataSetDAOTest extends AbstractDAOTest<PhoneEntity> {
 
 	private PhoneDataSetDAO phoneDataSetDAO = new PhoneDataSetHibernateImpl(PersistenceUnit.createEntityManager());
 
 	@Override
-	protected PhoneDataSet create() {
-		PhoneDataSet phone = new PhoneDataSet();
+	protected PhoneEntity create() {
+		PhoneEntity phone = new PhoneEntity();
 		phone.setCode(testName.hashCode() % 1000);
 		phone.setNumber(phone.getCode() + "" + testName.hashCode());
 		return phone;
@@ -29,18 +29,18 @@ public class PhoneDataSetDAOTest extends AbstractDAOTest<PhoneDataSet> {
 	}
 
 	@Override
-	protected void update(PhoneDataSet dataSet) {
+	protected void update(PhoneEntity dataSet) {
 		dataSet.setNumber("updated " + dataSet.getNumber());
 	}
 
 	@Test
 	public void shouldLoadByCodeEntity() {
 		//given
-		PhoneDataSet dataSet = create();
+		PhoneEntity dataSet = create();
 
 		//when
 		dataSet = dao().save(dataSet);
-		List<PhoneDataSet> loaded = dao().readByCode(dataSet.getCode());
+		List<PhoneEntity> loaded = dao().readByCode(dataSet.getCode());
 
 		//then
 		Assert.assertTrue(loaded.contains(dataSet));

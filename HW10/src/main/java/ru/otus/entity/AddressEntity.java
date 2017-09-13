@@ -6,20 +6,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-/**
- * @author e.petrov. Created 07 - 2017.
- */
 @Entity
-@Getter
-@Setter
+@Data
 @ToString(callSuper = true, exclude = {"user"})
+@EqualsAndHashCode(callSuper = true, exclude = {"user"})
 @Table(name = "address")
-@NamedQuery(name = "AddressDataSet.readAll", query = "SELECT a FROM AddressDataSet a")
-public class AddressDataSet extends DataSet{
+@NamedQuery(name = "AddressDataSet.readAll", query = "SELECT a FROM AddressEntity a")
+public class AddressEntity extends BaseEntity {
 
 	@Column(name = "street")
 	private String street;
@@ -28,5 +23,5 @@ public class AddressDataSet extends DataSet{
 	private int index;
 
 	@OneToOne(mappedBy = "userAddress")
-	private UserDataSet user;
+	private UserEntity user;
 }

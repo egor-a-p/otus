@@ -7,12 +7,12 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Session;
 
-import ru.otus.entity.DataSet;
+import ru.otus.entity.BaseEntity;
 
 /**
  * Created by egor on 25.07.17.
  */
-public abstract class AbstractDataSetHibernateDAO<T extends DataSet> implements DataSetDAO<T> {
+public abstract class AbstractDataSetHibernateDAO<T extends BaseEntity> implements DataSetDAO<T> {
 
 	protected final EntityManager em;
 	protected final Class<T> entityClass;

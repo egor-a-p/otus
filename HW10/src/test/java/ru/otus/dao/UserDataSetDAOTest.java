@@ -7,30 +7,30 @@ import java.util.stream.IntStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import ru.otus.entity.AddressDataSet;
-import ru.otus.entity.PhoneDataSet;
-import ru.otus.entity.UserDataSet;
+import ru.otus.entity.AddressEntity;
+import ru.otus.entity.PhoneEntity;
+import ru.otus.entity.UserEntity;
 import ru.otus.persistence.PersistenceUnit;
 
 /**
  * @author e.petrov. Created 07 - 2017.
  */
-public class UserDataSetDAOTest extends AbstractDAOTest<UserDataSet> {
+public class UserDataSetDAOTest extends AbstractDAOTest<UserEntity> {
 
 	private UserDataSetDAO userDataSetDAO = new UserDataSetDAOHibernateImpl(PersistenceUnit.createEntityManager());
 
 	@Override
-	protected UserDataSet create() {
-		UserDataSet user = new UserDataSet();
-		AddressDataSet address = new AddressDataSet();
+	protected UserEntity create() {
+		UserEntity user = new UserEntity();
+		AddressEntity address = new AddressEntity();
 		address.setStreet("street for test: " + testName.getMethodName());
 		address.setIndex(testName.getMethodName().length());
 		address.setUser(user);
 
-		List<PhoneDataSet> phones = new ArrayList<>();
+		List<PhoneEntity> phones = new ArrayList<>();
 
 		IntStream.range(0, testName.hashCode() % 5).forEach(i -> {
-			PhoneDataSet phone = new PhoneDataSet();
+			PhoneEntity phone = new PhoneEntity();
 			phone.setCode(i);
 			phone.setNumber("" + testName.hashCode() + i);
 			phone.setUser(user);
@@ -50,18 +50,18 @@ public class UserDataSetDAOTest extends AbstractDAOTest<UserDataSet> {
 	}
 
 	@Override
-	protected void update(UserDataSet dataSet) {
+	protected void update(UserEntity dataSet) {
 		dataSet.setName("updated user for test: " + testName.getMethodName() + 1000 * Math.random());
 	}
 
 	@Test
 	public void shouldLoadByNameEntity() {
 		//given
-		UserDataSet dataSet = create();
+		UserEntity dataSet = create();
 
 		//when
 		dataSet = dao().save(dataSet);
-		UserDataSet loaded = dao().readByName(dataSet.getName());
+		UserEntity loaded = dao().readByName(dataSet.getName());
 
 		//then
 		Assert.assertEquals(dataSet, loaded);

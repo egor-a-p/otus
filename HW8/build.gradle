@@ -1,0 +1,8 @@
+dependencies {
+    compile 'com.googlecode.json-simple:json-simple:1.1.1',
+            'org.apache.commons:commons-lang3:3.6'
+
+    compileOnly 'org.projectlombok:lombok:1.16.16'
+    testCompile 'com.google.code.gson:gson:2.8.1'
+    testCompileOnly 'org.projectlombok:lombok:1.16.16'
+}
