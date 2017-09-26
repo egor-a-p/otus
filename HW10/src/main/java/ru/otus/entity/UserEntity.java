@@ -1,6 +1,8 @@
 package ru.otus.entity;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,11 +15,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -41,4 +47,17 @@ public class UserEntity extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
 	private List<PhoneEntity> phones = new ArrayList<>();
+
+	@Column(name = "p_data", nullable = false)
+	@Getter(AccessLevel.NONE)
+	@Setter(AccessLevel.NONE)
+	private String password = StringUtils.EMPTY;
+
+	public void setPassword(String password) {
+		this.password = Base64.getEncoder().encodeToString(password.getBytes());
+	}
+
+	public String getPassword() {
+		return new String(Base64.getDecoder().decode(password), Charset.forName("UTF-8"));
+	}
 }
